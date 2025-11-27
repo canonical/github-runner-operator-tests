@@ -17,12 +17,13 @@ jobs:
             - name: Set runner output
               id: set-runner
               run: |
-                  # Check if this is from a test branch. Test branches are named 'test-*'
-                  if [[ "${{ github.head_ref }}" == test-* ]]; then
-                      # get the name of the test runner which is in the * of the test-* name.
-                      runner_id="${{ github.head_ref }}"
+                  # Check if this is from a test branch. Test branches are named 'test/*'
+                  if [[ "${{ github.head_ref }}" == test/* ]]; then
+                      # get the name of the test runner which is in the * of the test/* name.
+                      branch_name="${{ github.head_ref }}"
+                      runner_id="${branch_name#test/}"
                       echo "is-test=true" >> $GITHUB_OUTPUT
-                      echo "runner-id=${runner_id}" >> $GITHUB_OUTPUT
+                      echo "runner-id=test-${runner_id}" >> $GITHUB_OUTPUT
                   else
                       echo "is-test=false" >> $GITHUB_OUTPUT
                       echo "runner-id=pfe-ci" >> $GITHUB_OUTPUT
