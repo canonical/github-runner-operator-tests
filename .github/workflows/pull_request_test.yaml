@@ -1,8 +1,7 @@
 name: Pull request test
 
 on:
-    pull_request_target:
-        types: [opened, synchronize, reopened]
+    pull_request:
 
 jobs:
     parse-runner:
