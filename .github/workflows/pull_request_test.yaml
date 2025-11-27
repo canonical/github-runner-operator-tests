@@ -1,0 +1,38 @@
+name: Pull request test
+
+on:
+    pull_request_target:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    parse-runner:
+        runs-on: ubuntu-latest
+        outputs:
+            runner-id: ${{ steps.set-runner.outputs.runner-id }}
+            is-test: ${{ steps.set-runner.outputs.is-test }}
+        steps:
+            - name: Print PR user info
+              id: print-user-info
+              run: |
+                  echo ${{ github.event.pull_request.author_association }}
+            - name: Set runner output
+              id: set-runner
+              run: |
+                  # Check if this is from a test branch. Test branches are named 'test-*'
+                  if [[ "${{ github.head_ref }}" == test-* ]]; then
+                      # get the name of the test runner which is in the * of the test-* name.
+                      branch_name="${{ github.head_ref }}"
+                      runner_id="${branch_name#test-}"
+                      echo "is-test=true" >> $GITHUB_OUTPUT
+                      echo "runner-id=${runner_id}" >> $GITHUB_OUTPUT
+                  else
+                      echo "is-test=false" >> $GITHUB_OUTPUT
+                      echo "runner-id=pfe-ci" >> $GITHUB_OUTPUT
+                  fi
+    simple-test:
+        needs: parse-runner
+        runs-on: [self-hosted, "${{ needs.parse-runner.outputs.runner-id }}"]
+        if: ${{needs.parse-runner.outputs.is-test}} == 'true'
+        steps:
+            - name: Run a one-liner script
+              run: echo "This is a simple pull request test."
