@@ -65,6 +65,7 @@ jobs:
                   [host."$DOCKERHUB_MIRROR"]
                       capabilities = ["pull", "resolve"]
                   EOF
+                  cat /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml
             - name: Restart microk8s to apply mirror settings
               run: microk8s stop && microk8s start
             - name: Wait for microk8s
