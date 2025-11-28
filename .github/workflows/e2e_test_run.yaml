@@ -59,7 +59,7 @@ jobs:
               run: sudo snap install microk8s --classic
             - name: Setup Dockerhub mirror for microk8s
               run: |
-                  sudo tee /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml > /dev/null << 'EOF'
+                  sudo tee /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml > /dev/null << EOF
                   server = "$DOCKERHUB_MIRROR"
 
                   [host."$DOCKERHUB_MIRROR"]
