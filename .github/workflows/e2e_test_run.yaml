@@ -55,8 +55,8 @@ jobs:
               run: |
                   sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
                   sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
-                  - name: Install microk8s
-                  run: sudo snap install microk8s --classic
+            - name: Install microk8s
+              run: sudo snap install microk8s --classic
             - name: Setup Dockerhub mirror for microk8s
               run: |
                   sudo tee /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml > /dev/null << 'EOF'
